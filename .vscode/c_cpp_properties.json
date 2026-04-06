@@ -1,0 +1,45 @@
+{
+  "env": {
+    "sdk_file_dir": "C:/Dev/ti/sdk/simplelink_lowpower_f3_sdk_9_14_02_16",
+    "arm_clang_dir": "C:/Dev/ti/tool/armllvm_5.1.0",
+    "w32_gcc_dir": "C:/Dev/compiler/w64devkit/w64devkit",
+    "device_name": "CC27xx"
+  },
+  "configurations": [
+    {
+      "name": "windows-gcc-x64",
+      "includePath": [
+        "${workspaceFolder}/ccs_project",
+        "${workspaceFolder}/ccs_project/out_debug/syscfg",
+        "${workspaceFolder}/ccs_project/src/config/**",
+        "${workspaceFolder}/ccs_project/src/lib/**",
+        "${workspaceFolder}/ext/printf/src",
+        "${workspaceFolder}/ccs_project/src/**",
+        "${sdk_file_dir}/source",
+        "${sdk_file_dir}/source/ti/ble/app_util/framework/",
+        "${sdk_file_dir}/source/ti/posix/freertos",
+        "${sdk_file_dir}/source/ti/drivers/**",
+        "${sdk_file_dir}/source/ti/devices/cc27xx/driverlib",
+        "${sdk_file_dir}/source/third_party/freertos/include",
+        "${sdk_file_dir}/source/third_party/freertos/portable/GCC/ARM_CM33/non_secure",
+        "${sdk_file_dir}/kernel/freertos",
+        "${arm_clang_dir}/lib/clang/22/include",
+        "${arm_clang_dir}/include/c"
+      ],
+      "compilerPath": "C:/Dev/compiler/w64devkit/bin/gcc.exe",
+      "cStandard": "${default}",
+      "cppStandard": "${default}",
+      "intelliSenseMode": "windows-gcc-x64",
+      "defines": [
+        "_DEBUG",
+        "__TI_COMPILER_VERSION__",
+        "DeviceFamily_CC27XX",
+        "configUSE_NEWLIB_REENTRANT=0",
+        "PROFILE_CC2745",
+        "HOST_CONFIG=0x06",
+        ""
+      ]
+    }
+  ],
+  "version": 4
+}

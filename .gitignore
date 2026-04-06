@@ -1,0 +1,16 @@
+# Folders
+ccs_project/.settings
+ccs_project/.launches
+ccs_project/out_*
+trash
+
+# Files
+*.zip
+*.7z
+*.launch
+*.ini
+build_date.h
+build_time.h
+
+# Use Template to replace 
+.env

@@ -1,0 +1,22 @@
+# https://taskfile.dev
+
+version: '3'
+
+# Load .env file of workspace
+dotenv: [ ".env" ]
+
+# Echo off
+silent: true
+
+vars:
+  workspace_dir: '{{.ROOT_DIR}}'
+
+tasks:
+  ## Util Commands ##
+  codeline:
+    desc: Count code lines in project/source
+    cmds:
+    - echo "=================================================="
+    - echo "Count Code Lines of Project"
+    - echo "=================================================="    
+    - scc ./ccs_project/src

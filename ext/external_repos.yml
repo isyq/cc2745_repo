@@ -1,0 +1,5 @@
+printf:
+  description: Tiny, fast(ish), self-contained, fully loaded printf, sprinf etc. implementation; particularly useful in embedded systems.
+  version: 6.3.0
+  homepage: https://github.com/eyalroz/printf.git
+
