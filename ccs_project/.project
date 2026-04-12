@@ -321,6 +321,26 @@
 			<locationURI>COM_TI_SIMPLELINK_LOWPOWER_F3_SDK_INSTALL_DIR/source/ti/ble/stack_util/health_toolkit/debugInfo_errno.h</locationURI>
 		</link>
 		<link>
+			<name>sdk_ref/Profiles/ranging/ranging_db_server.c</name>
+			<type>1</type>
+			<locationURI>COM_TI_SIMPLELINK_LOWPOWER_F3_SDK_INSTALL_DIR/source/ti/ble/profiles/ranging/src/ranging_db_server.c</locationURI>
+		</link>
+		<link>
+			<name>sdk_ref/Profiles/ranging/ranging_db_server.h</name>
+			<type>1</type>
+			<locationURI>COM_TI_SIMPLELINK_LOWPOWER_F3_SDK_INSTALL_DIR/source/ti/ble/profiles/ranging/ranging_db_server.h</locationURI>
+		</link>
+		<link>
+			<name>sdk_ref/Profiles/ranging/ranging_profile.c</name>
+			<type>1</type>
+			<locationURI>COM_TI_SIMPLELINK_LOWPOWER_F3_SDK_INSTALL_DIR/source/ti/ble/profiles/ranging/src/ranging_profile.c</locationURI>
+		</link>
+		<link>
+			<name>sdk_ref/Profiles/ranging/ranging_profile.h</name>
+			<type>1</type>
+			<locationURI>COM_TI_SIMPLELINK_LOWPOWER_F3_SDK_INSTALL_DIR/source/ti/ble/profiles/ranging/ranging_profile.h</locationURI>
+		</link>
+		<link>
 			<name>sdk_ref/Profiles/simple_gatt/simple_gatt_profile.c</name>
 			<type>1</type>
 			<locationURI>COM_TI_SIMPLELINK_LOWPOWER_F3_SDK_INSTALL_DIR/source/ti/ble/profiles/simple_gatt/src/simple_gatt_profile.c</locationURI>
@@ -339,6 +359,16 @@
 			<name>sdk_ref/Services/dev_info/dev_info_service.h</name>
 			<type>1</type>
 			<locationURI>COM_TI_SIMPLELINK_LOWPOWER_F3_SDK_INSTALL_DIR/source/ti/ble/services/dev_info/dev_info_service.h</locationURI>
+		</link>
+		<link>
+			<name>sdk_ref/Services/ranging/ranging_server.c</name>
+			<type>1</type>
+			<locationURI>COM_TI_SIMPLELINK_LOWPOWER_F3_SDK_INSTALL_DIR/source/ti/ble/services/ranging/src/ranging_server.c</locationURI>
+		</link>
+		<link>
+			<name>sdk_ref/Services/ranging/ranging_server.h</name>
+			<type>1</type>
+			<locationURI>COM_TI_SIMPLELINK_LOWPOWER_F3_SDK_INSTALL_DIR/source/ti/ble/services/ranging/ranging_server.h</locationURI>
 		</link>
 	</linkedResources>
 	<variableList>

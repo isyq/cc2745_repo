@@ -64,8 +64,6 @@ static bool perform_command(ble_op_queue_t* p_queue, ble_op_t* p_op)
 
 void ble_opq_process(ble_op_queue_t* p_queue)
 {
-    ret_t ret = RET_OK;
-
     list_node_t* p_node;
     while (true)
     {

@@ -16,7 +16,10 @@
         "${workspaceFolder}/ext/printf/src",
         "${workspaceFolder}/ccs_project/src/**",
         "${sdk_file_dir}/source",
-        "${sdk_file_dir}/source/ti/ble/app_util/framework/",
+        "${sdk_file_dir}/source/ti/ble/host/cs",
+        "${sdk_file_dir}/source/ti/ble/profiles",
+        "${sdk_file_dir}/source/ti/ble/app_util/framework",
+        "${sdk_file_dir}/source/ti/ble/app_util/config",
         "${sdk_file_dir}/source/ti/posix/freertos",
         "${sdk_file_dir}/source/ti/drivers/**",
         "${sdk_file_dir}/source/ti/devices/cc27xx/driverlib",
@@ -37,6 +40,8 @@
         "configUSE_NEWLIB_REENTRANT=0",
         "PROFILE_CC2745",
         "HOST_CONFIG=0x06",
+        "CHANNEL_SOUNDING",
+        "RANGING_SERVER",
         ""
       ]
     }

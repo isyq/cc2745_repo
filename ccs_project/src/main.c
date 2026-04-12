@@ -1,4 +1,4 @@
-#include "ble_host_task.h"
+#include "ble_task.h"
 #include "hal_os_api.h"
 #include "fwk_init.h"
 #include "fwk_util.h"
@@ -19,7 +19,7 @@ int main()
     log_info("Device name: %s", attDeviceName);
     log_info("======================================");
 
-    ble_host_task_init();
+    ble_task_init();
 
     hal_task_start_scheduler();
 

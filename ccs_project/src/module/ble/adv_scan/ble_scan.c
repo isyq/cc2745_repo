@@ -34,9 +34,9 @@ BLEAppUtil_ConnectParams_t centralConnParams =
     .timeout = 0
 };
 
-void DEF_BLE_EVENT_HANDLER_NAME(BLEAPPUTIL_GAP_SCAN_TYPE)(uint32 event, BLEAppUtil_msgHdr_t* pMsgData)
+static void DEF_BLE_EVENT_HANDLER_NAME(BLEAPPUTIL_GAP_SCAN_TYPE)(uint32 event, BLEAppUtil_msgHdr_t* pMsgData)
 {
-    BLEAppUtil_ScanEventData_t* scanMsg = (BLEAppUtil_ScanEventData_t*)pMsgData;
+    // BLEAppUtil_ScanEventData_t* scanMsg = (BLEAppUtil_ScanEventData_t*)pMsgData;
 
     switch (event)
     {
@@ -56,8 +56,18 @@ void DEF_BLE_EVENT_HANDLER_NAME(BLEAPPUTIL_GAP_SCAN_TYPE)(uint32 event, BLEAppUt
     }
 }
 
+static BLEAppUtil_EventHandler_t m_scan_event_cfg =
+{
+    .handlerType   = BLEAPPUTIL_GAP_SCAN_TYPE,
+    .pEventHandler = DEF_BLE_EVENT_HANDLER_NAME(BLEAPPUTIL_GAP_SCAN_TYPE),
+    .eventMask     = BLEAPPUTIL_SCAN_ENABLED |
+                     BLEAPPUTIL_SCAN_DISABLED
+};
+
 void ble_scan_init(void)
 {
+    BLEAppUtil_registerEventHandler(&m_scan_event_cfg);
+
     BLEAppUtil_scanInit(&centralScanInitParams);
     BLEAppUtil_setConnParams(&centralConnInitParams);
 }
