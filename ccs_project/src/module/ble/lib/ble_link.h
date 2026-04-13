@@ -8,13 +8,16 @@
 
 typedef struct
 {
-    bool is_peer_central;
+    bool is_self_central;
+    bool is_self_cs_initiator;
+    bool is_self_ras_client;
 
     uint8_t peer_addr_type;
     uint8_t peer_adv_addr_le[6];   // Little endian
     uint8_t peer_mac_addr_le[6];   // Little endian
+    uint8_t peer_irk[16];
 
-    uint8_t irk[16];
+    uint8_t ltk[16];
 
     uint64_t conn_timestamp;
 
@@ -24,8 +27,6 @@ typedef struct
     uint16_t llcp_interval;
     uint16_t llcp_timeout;
     uint16_t llcp_latency;
-
-    uint8_t ltk[16];
 
     uint16_t rx_count;
     uint16_t tx_count;

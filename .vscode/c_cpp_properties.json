@@ -41,7 +41,8 @@
         "PROFILE_CC2745",
         "HOST_CONFIG=0x06",
         "CHANNEL_SOUNDING",
-        "RANGING_SERVER",
+        "RANGING_CLIENT",
+        "CS_MEASURE_DISTANCE",
         ""
       ]
     }

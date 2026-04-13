@@ -25,7 +25,7 @@ void ble_link_init(void)
     }
 }
 
-ble_link_t* ble_link_add(uint16_t handle, uint8_t is_peer_central, uint8_t addr_type, uint8_t* p_adv_addr)
+ble_link_t* ble_link_add(uint16_t handle, uint8_t is_self_central, uint8_t addr_type, uint8_t* p_adv_addr)
 {
     ble_link_init();
 
@@ -40,7 +40,7 @@ ble_link_t* ble_link_add(uint16_t handle, uint8_t is_peer_central, uint8_t addr_
 
     link.handle                = handle;
     link.param.app_mtu         = CFG_BLE_APP_MTU;
-    link.param.is_peer_central = is_peer_central;
+    link.param.is_self_central = is_self_central;
     link.param.peer_addr_type  = addr_type;
     link.param.conn_timestamp  = hal_get_timestamp64();
 

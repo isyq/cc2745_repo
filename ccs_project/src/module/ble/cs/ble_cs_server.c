@@ -1,11 +1,14 @@
 #include "ranging/ranging_profile.h"
-#include "ble_util.h"
+#include "ti_ble_config.h"
 #include "bleapputil_api.h"
-#include "cs.h"
+#include "ble_util.h"
+#include "log.h"
 
 #ifndef MAX_NUM_BLE_CONNS
 #define MAX_NUM_BLE_CONNS 4
 #endif
+
+#define CS_SERVER_REAL_TIME_MODE 0
 
 #define KEY_NODE_INVALID_PROCEDURE_COUNTER 0xFFFFFFFF
 
@@ -31,7 +34,7 @@ static uint8_t handle_procedure_enable(CS_procEnableCompleteEvt_t* p_event)
     return SUCCESS;
 }
 
-static uint8_t handle_sub_event(CS_subeventResultsEvt_t* p_event)
+static uint8_t handle_subevent_result(CS_subeventResultsEvt_t* p_event)
 {
     uint8_t status = INVALIDPARAMETER;
     Ranging_RangingHeader_t rangingHeader;
@@ -79,7 +82,7 @@ static uint8_t handle_sub_event(CS_subeventResultsEvt_t* p_event)
     return status;
 }
 
-static uint8_t handle_sub_continue_event(CS_subeventResultsContinueEvt_t* p_event)
+static uint8_t handle_subevent_result_continue(CS_subeventResultsContinueEvt_t* p_event)
 {
     uint8_t status = INVALIDPARAMETER;
 
@@ -108,15 +111,18 @@ static uint8_t handle_sub_continue_event(CS_subeventResultsContinueEvt_t* p_even
     return status;
 }
 
-void DEF_BLE_EVENT_HANDLER_NAME(BLEAPPUTIL_CS_TYPE)(uint32_t event, BLEAppUtil_msgHdr_t* p_msg_data)
+static void DEF_BLE_EVENT_HANDLER_NAME(BLEAPPUTIL_CS_TYPE)(uint32_t event, BLEAppUtil_msgHdr_t* p_msg_data)
 {
     if (event == BLEAPPUTIL_CS_EVENT_CODE)
     {
-        csEvtHdr_t* p_event_data = (csEvtHdr_t*)p_msg_data;
-
-        switch (p_event_data->opcode)
+        switch (((csEvtHdr_t*)p_msg_data)->opcode)
         {
         case CS_READ_REMOTE_SUPPORTED_CAPABILITIES_COMPLETE_EVENT:
+            memset(m_proc_counts, 0xFF, MAX_NUM_BLE_CONNS * sizeof(m_proc_counts[0]));
+            memset(m_antenna_paths, 0, MAX_NUM_BLE_CONNS * sizeof(m_antenna_paths[0]));
+
+            break;
+
         case CS_CONFIG_COMPLETE_EVENT:
         case CS_READ_REMOTE_FAE_TABLE_COMPLETE_EVENT:
             break;
@@ -148,7 +154,7 @@ void DEF_BLE_EVENT_HANDLER_NAME(BLEAPPUTIL_CS_TYPE)(uint32_t event, BLEAppUtil_m
             m_curr_proc_count = p_event_data->procedureCounter;
             uint8_t proc_status = p_event_data->procedureDoneStatus;
 
-            handle_sub_event(p_event_data);
+            handle_subevent_result(p_event_data);
 
             if (proc_status == CS_PROCEDURE_DONE || proc_status == CS_PROCEDURE_ABORTED)
             {
@@ -182,7 +188,7 @@ void DEF_BLE_EVENT_HANDLER_NAME(BLEAPPUTIL_CS_TYPE)(uint32_t event, BLEAppUtil_m
 
                     memcpy(p_conti_event->data, p_event_data->data, p_event_data->dataLen);
 
-                    handle_sub_continue_event(p_conti_event);
+                    handle_subevent_result_continue(p_conti_event);
 
                     ICall_free(p_conti_event);
                 }
@@ -201,4 +207,41 @@ void DEF_BLE_EVENT_HANDLER_NAME(BLEAPPUTIL_CS_TYPE)(uint32_t event, BLEAppUtil_m
             break;
         }
     }
+}
+
+static void server_handle_cccd_update(uint16_t conn_handle, uint16_t p_value)
+{
+    return;
+}
+
+static void server_handle_status_update(uint8_t status, uint16_t conn_handle, uint16_t ranging_counter)
+{
+    switch (status)
+    {
+    case RRSP_SENDING_PROCEDURE_STARTED:
+        break;
+
+    case RRSP_SENDING_PROCEDURE_ENDED:
+        break;
+
+    case RRSP_STATUS_SENDING_PROCEDURE_ABORTED:
+        break;
+
+    default:
+        break;
+    }
+}
+
+void ble_cs_server_init(void)
+{
+    BLEAppUtil_EventHandler_t cs_event_cfg =
+    {
+        .handlerType   = BLEAPPUTIL_CS_TYPE,
+        .pEventHandler = DEF_BLE_EVENT_HANDLER_NAME(BLEAPPUTIL_CS_TYPE),
+        .eventMask     = BLEAPPUTIL_CS_EVENT_CODE
+    };
+    BLEAppUtil_registerEventHandler(&cs_event_cfg);
+
+    RRSP_cb_t server_callback = {server_handle_cccd_update, server_handle_status_update};
+    RRSP_start(&server_callback, CS_SERVER_REAL_TIME_MODE);
 }

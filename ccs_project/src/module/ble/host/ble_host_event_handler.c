@@ -135,8 +135,8 @@ void DEF_BLE_EVENT_HANDLER_NAME(BLEAPPUTIL_PAIR_STATE_TYPE)(uint32 event, BLEApp
 
     case BLEAPPUTIL_PAIRING_STATE_COMPLETE:
     {
-#if defined(CHANNEL_SOUNDING)
-        if (p_link->param.is_peer_central)
+#if defined RANGING_SERVER
+        if (!p_link->param.is_self_central)
         {
             CS_securityEnableCmdParams_t param = {p_event_data->connHandle};
             CS_SecurityEnable(&param);
@@ -147,18 +147,25 @@ void DEF_BLE_EVENT_HANDLER_NAME(BLEAPPUTIL_PAIR_STATE_TYPE)(uint32 event, BLEApp
 
     case BLEAPPUTIL_PAIRING_STATE_ENCRYPTED:
     {
-#if defined CHANNEL_SOUNDING
-        if (p_link->param.is_peer_central)
+#if defined RANGING_SERVER
+        if (!p_link->param.is_self_central)
         {
             CS_securityEnableCmdParams_t param = {p_event_data->connHandle};
             CS_SecurityEnable(&param);
         }
+#endif
+
+#if defined RANGING_CLIENT
+     ble_cs_client_enable(p_event_data->connHandle, 1); // On-demond mode
 #endif
     }
     break;
 
     case BLEAPPUTIL_PAIRING_STATE_BOND_SAVED:
     {
+#if defined RANGING_CLIENT
+     ble_cs_client_enable(p_event_data->connHandle, 1);
+#endif
     }
     break;
 

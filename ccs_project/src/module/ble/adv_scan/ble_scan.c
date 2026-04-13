@@ -56,17 +56,16 @@ static void DEF_BLE_EVENT_HANDLER_NAME(BLEAPPUTIL_GAP_SCAN_TYPE)(uint32 event, B
     }
 }
 
-static BLEAppUtil_EventHandler_t m_scan_event_cfg =
-{
-    .handlerType   = BLEAPPUTIL_GAP_SCAN_TYPE,
-    .pEventHandler = DEF_BLE_EVENT_HANDLER_NAME(BLEAPPUTIL_GAP_SCAN_TYPE),
-    .eventMask     = BLEAPPUTIL_SCAN_ENABLED |
-                     BLEAPPUTIL_SCAN_DISABLED
-};
-
 void ble_scan_init(void)
 {
-    BLEAppUtil_registerEventHandler(&m_scan_event_cfg);
+    BLEAppUtil_EventHandler_t event_cfg =
+    {
+        .handlerType   = BLEAPPUTIL_GAP_SCAN_TYPE,
+        .pEventHandler = DEF_BLE_EVENT_HANDLER_NAME(BLEAPPUTIL_GAP_SCAN_TYPE),
+        .eventMask     = BLEAPPUTIL_SCAN_ENABLED | BLEAPPUTIL_SCAN_DISABLED
+    };
+
+    BLEAppUtil_registerEventHandler(&event_cfg);
 
     BLEAppUtil_scanInit(&centralScanInitParams);
     BLEAppUtil_setConnParams(&centralConnInitParams);
