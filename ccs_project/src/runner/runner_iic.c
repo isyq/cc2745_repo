@@ -11,8 +11,17 @@ static void runner_task_entry(void* arg)
 
     for (;;)
     {
-        hal_iic_send_timeout(IIC_INST, 0x1122, (uint8_t*)"Hello\r\n", 7, 1000);
-        log_info("IIC send complete, %d", count++);
+        if (count < 3)
+        {
+            hal_iic_close(IIC_INST);
+        }
+        else
+        {
+            hal_iic_init(IIC_INST, 1, NULL);
+            hal_iic_send(IIC_INST, 0x1122, (uint8_t*)"Hello\r\n", 7);
+        }
+
+        log_info("IIC count, %d", count++);
 
         hal_delay_ms(1000);
     }

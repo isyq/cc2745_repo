@@ -110,6 +110,7 @@ uint16_t hal_uart_receive(uint8_t inst, uint8_t* p_data, uint16_t data_len)
 
 static I2C_Handle m_iic_handles[2];
 static hal_iic_isr_fn m_iic_isrs[2];
+static bool m_iic_enabled[2];
 
 void on_iic_isr_0(I2C_Handle handle, I2C_Transaction *transaction, bool transferStatus)
 {
@@ -123,11 +124,16 @@ void on_iic_isr_1(I2C_Handle handle, I2C_Transaction *transaction, bool transfer
 
 void hal_iic_init(uint8_t inst, uint8_t bit_rate, hal_iic_isr_fn isr_fn)
 {
+    if (m_iic_enabled[inst])
+    {
+        return;
+    }
+
     assert(bit_rate <= 3);
 
     I2C_Params param;
 
-    I2C_init();
+    m_iic_enabled[inst] = true;
 
     I2C_Params_init(&param);
     param.bitRate = (I2C_BitRate)bit_rate;
@@ -185,5 +191,11 @@ void hal_iic_receive(uint8_t inst, uint16_t slave_addr, uint8_t* p_data, uint16_
 
 void hal_iic_close(uint8_t inst)
 {
+    if (!m_iic_enabled[inst])
+    {
+        return;
+    }
+
+    m_iic_enabled[inst] = false;
     I2C_close(m_iic_handles[inst]);
 }
