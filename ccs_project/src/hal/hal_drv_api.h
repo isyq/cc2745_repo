@@ -47,5 +47,7 @@ void hal_iic_send(uint8_t inst, uint16_t slave_addr, uint8_t* p_data, uint16_t d
 void hal_iic_send_timeout(uint8_t inst, uint16_t slave_addr, uint8_t* p_data, uint16_t data_len, uint32_t timeout);
 void hal_iic_receive(uint8_t inst, uint16_t slave_addr, uint8_t* p_data, uint16_t data_len);
 void hal_iic_close(uint8_t inst);
+void hal_iic_cancel(uint8_t inst);
+void hal_iic_reset(uint8_t inst);
 
 #endif

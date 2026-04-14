@@ -1,6 +1,5 @@
 #include "hal_os_api.h"
 #include "log.h"
-#include <ti/log/Log.h>
 
 static void runner_task_entry(void *arg)
 {

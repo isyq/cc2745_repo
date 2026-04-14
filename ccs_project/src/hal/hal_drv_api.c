@@ -2,6 +2,7 @@
 #include <ti/drivers/GPIO.h>
 #include <ti/drivers/UART2.h>
 #include <ti/drivers/I2C.h>
+#include <ti/drivers/i2c/I2CLPF3.h>
 #include "ti_drivers_config.h"
 #include "hal_drv_api.h"
 
@@ -112,12 +113,12 @@ static I2C_Handle m_iic_handles[2];
 static hal_iic_isr_fn m_iic_isrs[2];
 static bool m_iic_enabled[2];
 
-void on_iic_isr_0(I2C_Handle handle, I2C_Transaction *transaction, bool transferStatus)
+void on_iic_isr_0(I2C_Handle handle, I2C_Transaction* transaction, bool transferStatus)
 {
     m_iic_isrs[0](transaction->readBuf, transaction->readCount);
 }
 
-void on_iic_isr_1(I2C_Handle handle, I2C_Transaction *transaction, bool transferStatus)
+void on_iic_isr_1(I2C_Handle handle, I2C_Transaction* transaction, bool transferStatus)
 {
     m_iic_isrs[1](transaction->readBuf, transaction->readCount);
 }
@@ -151,6 +152,11 @@ void hal_iic_init(uint8_t inst, uint8_t bit_rate, hal_iic_isr_fn isr_fn)
 
 void hal_iic_send(uint8_t inst, uint16_t slave_addr, uint8_t* p_data, uint16_t data_len)
 {
+    if (!m_iic_enabled[inst])
+    {
+        return;
+    }
+
     I2C_Transaction transaction;
 
     transaction.targetAddress = slave_addr;
@@ -159,12 +165,16 @@ void hal_iic_send(uint8_t inst, uint16_t slave_addr, uint8_t* p_data, uint16_t d
     transaction.readBuf       = NULL;
     transaction.readCount     = 0;
 
-    // I2C_transfer(m_iic_handles[inst], &transaction);
-    I2C_transferTimeout(m_iic_handles[inst], &transaction, 1000);
+    I2C_transfer(m_iic_handles[inst], &transaction);
 }
 
 void hal_iic_send_timeout(uint8_t inst, uint16_t slave_addr, uint8_t* p_data, uint16_t data_len, uint32_t timeout)
 {
+    if (!m_iic_enabled[inst])
+    {
+        return;
+    }
+
     I2C_Transaction transaction;
 
     transaction.targetAddress = slave_addr;
@@ -178,6 +188,11 @@ void hal_iic_send_timeout(uint8_t inst, uint16_t slave_addr, uint8_t* p_data, ui
 
 void hal_iic_receive(uint8_t inst, uint16_t slave_addr, uint8_t* p_data, uint16_t data_len)
 {
+    if (!m_iic_enabled[inst])
+    {
+        return;
+    }
+
     I2C_Transaction transaction;
 
     transaction.targetAddress = slave_addr;
@@ -198,4 +213,31 @@ void hal_iic_close(uint8_t inst)
 
     m_iic_enabled[inst] = false;
     I2C_close(m_iic_handles[inst]);
+}
+
+void hal_iic_cancel(uint8_t inst)
+{
+    if (!m_iic_enabled[inst])
+    {
+        return;
+    }
+
+    I2C_cancel(m_iic_handles[inst]);
+}
+
+void hal_iic_reset(uint8_t inst)
+{
+    if (m_iic_enabled[inst])
+    {
+        return;
+    }
+
+    /*
+     * If IIC is closed and then call I2C_transfer(), then it will stuck at transferComplete semaphore.
+     * So we need to post the semaphore to avoid this.
+     * Note, this function should be called in another task context. 
+     */
+    I2CLPF3_Object* p_object = m_iic_handles[inst]->object;
+
+    SemaphoreP_post(&(p_object->transferComplete));
 }
