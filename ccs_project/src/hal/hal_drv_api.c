@@ -1,5 +1,7 @@
+#include <assert.h>
 #include <ti/drivers/GPIO.h>
 #include <ti/drivers/UART2.h>
+#include <ti/drivers/I2C.h>
 #include "ti_drivers_config.h"
 #include "hal_drv_api.h"
 
@@ -102,4 +104,86 @@ uint16_t hal_uart_send(uint8_t inst, uint8_t* p_data, uint16_t data_len)
 uint16_t hal_uart_receive(uint8_t inst, uint8_t* p_data, uint16_t data_len)
 {
     return UART2_read(m_uart_handles[inst], p_data, data_len, NULL);
+}
+
+/* ------------------------- IIC ------------------------- */
+
+static I2C_Handle m_iic_handles[2];
+static hal_iic_isr_fn m_iic_isrs[2];
+
+void on_iic_isr_0(I2C_Handle handle, I2C_Transaction *transaction, bool transferStatus)
+{
+    m_iic_isrs[0](transaction->readBuf, transaction->readCount);
+}
+
+void on_iic_isr_1(I2C_Handle handle, I2C_Transaction *transaction, bool transferStatus)
+{
+    m_iic_isrs[1](transaction->readBuf, transaction->readCount);
+}
+
+void hal_iic_init(uint8_t inst, uint8_t bit_rate, hal_iic_isr_fn isr_fn)
+{
+    assert(bit_rate <= 3);
+
+    I2C_Params param;
+
+    I2C_init();
+
+    I2C_Params_init(&param);
+    param.bitRate = (I2C_BitRate)bit_rate;
+
+    if (isr_fn != NULL)
+    {
+        param.transferMode        = I2C_MODE_CALLBACK;
+        param.transferCallbackFxn = inst == 0 ? on_iic_isr_0 : on_iic_isr_1;
+
+        m_iic_isrs[inst] = isr_fn;
+    }
+
+    m_iic_handles[inst] = I2C_open(inst, &param);
+}
+
+void hal_iic_send(uint8_t inst, uint16_t slave_addr, uint8_t* p_data, uint16_t data_len)
+{
+    I2C_Transaction transaction;
+
+    transaction.targetAddress = slave_addr;
+    transaction.writeBuf      = p_data;
+    transaction.writeCount    = data_len;
+    transaction.readBuf       = NULL;
+    transaction.readCount     = 0;
+
+    // I2C_transfer(m_iic_handles[inst], &transaction);
+    I2C_transferTimeout(m_iic_handles[inst], &transaction, 1000);
+}
+
+void hal_iic_send_timeout(uint8_t inst, uint16_t slave_addr, uint8_t* p_data, uint16_t data_len, uint32_t timeout)
+{
+    I2C_Transaction transaction;
+
+    transaction.targetAddress = slave_addr;
+    transaction.writeBuf      = p_data;
+    transaction.writeCount    = data_len;
+    transaction.readBuf       = NULL;
+    transaction.readCount     = 0;
+
+    I2C_transferTimeout(m_iic_handles[inst], &transaction, timeout);
+}
+
+void hal_iic_receive(uint8_t inst, uint16_t slave_addr, uint8_t* p_data, uint16_t data_len)
+{
+    I2C_Transaction transaction;
+
+    transaction.targetAddress = slave_addr;
+    transaction.writeBuf      = NULL;
+    transaction.writeCount    = 0;
+    transaction.readBuf       = p_data;
+    transaction.readCount     = data_len;
+
+    I2C_transfer(m_iic_handles[inst], &transaction);
+}
+
+void hal_iic_close(uint8_t inst)
+{
+    I2C_close(m_iic_handles[inst]);
 }

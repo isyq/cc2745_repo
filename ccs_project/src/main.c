@@ -3,6 +3,7 @@
 #include "fwk_init.h"
 #include "fwk_util.h"
 #include "ti_ble_config.h"
+#include "runner_list.h"
 #include "log.h"
 
 int main()
@@ -19,7 +20,9 @@ int main()
     log_info("Device name: %s", attDeviceName);
     log_info("======================================");
 
-    ble_task_init();
+    // ble_task_init();
+    runner_log_create_task();
+    runner_iic_create_task();
 
     hal_task_start_scheduler();
 

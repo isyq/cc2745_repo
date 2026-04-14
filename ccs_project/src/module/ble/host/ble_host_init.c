@@ -5,8 +5,11 @@
 #include "util_tool.h"
 #include "ble_adv.h"
 #include "ble_scan.h"
-#include "ble_cs.h"
 #include "log.h"
+
+#if defined CHANNEL_SOUNDING
+#include "ble_cs.h"
+#endif
 
 DEF_WEAK_BLE_EVENT_HANDLER(BLEAPPUTIL_GAP_CONN_TYPE);
 DEF_WEAK_BLE_EVENT_HANDLER(BLEAPPUTIL_HCI_GAP_TYPE);
@@ -111,7 +114,9 @@ static void stack_init_done(gapDeviceInitDoneEvent_t* deviceInitDoneData)
     BLEAppUtil_registerEventHandler(&m_l2cap_data_event_cfg);
     BLEAppUtil_registerEventHandler(&m_l2cap_signal_event_cfg);
 
+#if defined CHANNEL_SOUNDING
     ble_cs_init();
+#endif
 
     ble_adv_init();
     ble_scan_init();

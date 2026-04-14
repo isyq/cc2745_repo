@@ -37,11 +37,18 @@ static hal_mutex_t m_log_mutex;
 
 void log_init(void)
 {
-    m_log_level = CFG_LOG_LEVEL;
+    static bool is_init = false;
 
-    log_backend_init(CFG_LOG_BACKEND);
+    if (!is_init)
+    {
+        is_init = true;
 
-    INIT_MUTEX();
+        m_log_level = CFG_LOG_LEVEL;
+
+        log_backend_init(CFG_LOG_BACKEND);
+
+        INIT_MUTEX();
+    }
 }
 
 void log_set_level(log_level_t level)

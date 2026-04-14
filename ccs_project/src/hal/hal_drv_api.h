@@ -28,6 +28,7 @@
 
 typedef void (*hal_gpio_isr_fn)(uint8_t pin);
 typedef void (*hal_uart_isr_fn)(uint8_t* p_data, uint16_t data_len);
+typedef void (*hal_iic_isr_fn)(uint8_t* p_data, uint16_t data_len);
 
 void hal_gpio_init(void);
 void hal_gpio_create_in_pin(uint8_t pin, uint8_t pull, uint8_t int_type, hal_gpio_isr_fn isr_fn);
@@ -41,5 +42,10 @@ void hal_uart_init(uint8_t inst, uint32_t baud_rate, hal_uart_isr_fn isr_fn);
 uint16_t hal_uart_send(uint8_t inst, uint8_t* p_data, uint16_t data_len);
 uint16_t hal_uart_receive(uint8_t inst, uint8_t* p_data, uint16_t data_len);
 
+void hal_iic_init(uint8_t inst, uint8_t bit_rate, hal_iic_isr_fn isr_fn);
+void hal_iic_send(uint8_t inst, uint16_t slave_addr, uint8_t* p_data, uint16_t data_len);
+void hal_iic_send_timeout(uint8_t inst, uint16_t slave_addr, uint8_t* p_data, uint16_t data_len, uint32_t timeout);
+void hal_iic_receive(uint8_t inst, uint16_t slave_addr, uint8_t* p_data, uint16_t data_len);
+void hal_iic_close(uint8_t inst);
 
 #endif

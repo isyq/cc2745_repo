@@ -124,7 +124,6 @@ void DEF_BLE_EVENT_HANDLER_NAME(BLEAPPUTIL_PASSCODE_TYPE)(uint32 event, BLEAppUt
 void DEF_BLE_EVENT_HANDLER_NAME(BLEAPPUTIL_PAIR_STATE_TYPE)(uint32 event, BLEAppUtil_msgHdr_t* p_msg_data)
 {
     BLEAppUtil_PairStateData_t* p_event_data = (BLEAppUtil_PairStateData_t*)p_msg_data;
-    ble_link_t* p_link                       = ble_link_get(p_event_data->connHandle);
 
     switch (event)
     {
