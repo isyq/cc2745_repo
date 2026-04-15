@@ -37,6 +37,8 @@ const RNG1        = RNG.addInstance();
 const Button      = scripting.addModule("/ti/drivers/apps/Button", {}, false);
 const Button1     = Button.addInstance();
 const Button2     = Button.addInstance();
+const LogModule   = scripting.addModule("/ti/log/LogModule", {}, false);
+const LogModule1  = LogModule.addInstance();
 const Settings    = scripting.addModule("/ti/posix/freertos/Settings");
 
 /**
@@ -106,6 +108,16 @@ Button1.$hardware = system.deviceData.board.components["BTN-1"];
 Button2.$name     = "CONFIG_BUTTON_1";
 Button2.$hardware = system.deviceData.board.components["BTN-2"];
 
+LogModule1.$name      = "LogModule0";
+LogModule1.loggerSink = "/ti/log/LogSinkITM";
+
+const LogSinkITM  = scripting.addModule("/ti/log/LogSinkITM", {}, false);
+const LogSinkITM1 = LogSinkITM.addInstance({}, false);
+LogSinkITM1.$name = "CONFIG_ti_log_LogSinkITM_0";
+LogModule1.logger = LogSinkITM1;
+
+const ITM = scripting.addModule("/ti/drivers/ITM", {}, false);
+
 /**
  * References between modules.
  */
@@ -128,3 +140,5 @@ I2C1.i2c.sdaPin.$suggestSolution                 = "boosterpack.10";
 I2C1.i2c.sclPin.$suggestSolution                 = "boosterpack.9";
 Button1.button.$suggestSolution                  = "boosterpack.30";
 Button2.button.$suggestSolution                  = "boosterpack.40";
+ITM.swoPin.$suggestSolution                      = "SWO";
+ITM.swoPin.swoResource.$suggestSolution          = "boosterpack.39";

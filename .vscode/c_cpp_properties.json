@@ -21,6 +21,7 @@
         "${sdk_file_dir}/source/ti/ble/app_util/framework",
         "${sdk_file_dir}/source/ti/ble/app_util/config",
         "${sdk_file_dir}/source/ti/posix/freertos",
+        "${sdk_file_dir}/source/ti/drivers",
         "${sdk_file_dir}/source/ti/drivers/**",
         "${sdk_file_dir}/source/ti/devices/cc27xx/driverlib",
         "${sdk_file_dir}/source/third_party/freertos/include",
