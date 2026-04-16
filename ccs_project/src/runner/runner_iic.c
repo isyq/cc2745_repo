@@ -11,15 +11,6 @@ static void runner_task_entry(void* arg)
 
     for (;;)
     {
-        if (count < 1)
-        {
-            hal_iic_close(IIC_INST);
-            hal_iic_send(IIC_INST, 0x1122, (uint8_t*)"Hello\r\n", 7);
-        }
-        else
-        {
-            hal_iic_init(IIC_INST, 1, NULL);
-        }
         hal_iic_send(IIC_INST, 0x1122, (uint8_t*)"Hello\r\n", 7);
 
         log_info("IIC count, %d", count++);
