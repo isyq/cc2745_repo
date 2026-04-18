@@ -1,0 +1,15 @@
+openocd(TI fork):
+  description: TI fork of OpenOCD. 
+  summary: Official OpenOCD doesn't support cc26xx/cc27xx/cc23xx families. This one supports.
+  url: https://software-dl.ti.com/ccs/esd/vscode/ti-embedded-debug/ti-openocd.html
+
+scc:
+  description: Source code count
+  summary: Count the number of lines of code in a directory
+  url: https://github.com/boyter/scc
+
+
+lser:
+  description: Scan serial port
+  summary: To find serial port of TI devices
+  url: https://github.com/rede97/lser
