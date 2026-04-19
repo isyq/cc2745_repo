@@ -10,13 +10,15 @@ silent: true
 
 vars:
   workspace_dir: "{{.ROOT_DIR}}"
-  ti_gmake_dir: "{{.ENV_CCS_INSTALL_DIR}}/ccs/utils/bin"
+  ti_gmake_dir: "{{.ENV_CCS_INSTALL_DIR}}/utils/bin"
   
   ti_openocd_bin_dir: "{{.ROOT_DIR}}/{{.ENV_OPENOCD_REL_DIR}}/bin"
   ti_openocd_script_dir: "{{.ROOT_DIR}}/{{.ENV_OPENOCD_REL_DIR}}/share/openocd/scripts"
 
+  ti_ccs_script_launcher: "{{.ENV_CCS_INSTALL_DIR}}/scripting/python/launcher.py"
+
 tasks:
-  code_line_count:
+  util_code_line_count:
     desc: "Count code lines"
     cmds:
     - echo "=================================================="
@@ -25,7 +27,7 @@ tasks:
     - >
       tool/cli/scc ./ccs_project/src
 
-  list_port:
+  util_port_list:
     desc: "List serial port"
     cmds:
     - echo "=================================================="
@@ -63,71 +65,128 @@ tasks:
     - echo "Rebuild Project"
     - echo "=================================================="
 
-  openocd_program:
-    desc: "Program device"
-    vars:
-      binary_file_path: "{{.workspace_dir}}/ccs_project/{{.ENV_CCS_BUILD_TARGET}}/{{.ENV_PROJECT_HEX_NAME}}.out"
+  ccscript_read_hsm_ver:
+    desc: "Read HSM version"
     cmds:
     - echo "=================================================="
-    - echo "Program Device"
+    - echo "Read HSM Version"
     - echo "=================================================="
-    - echo "{{.cmd_str}}"
     - >
-      {{.ti_openocd_bin_dir}}/openocd.exe 
-      -f {{.ti_openocd_script_dir}}/interface/xds110.cfg 
-      -f {{.ti_openocd_script_dir}}/board/ti_lp_em_cc2745r10.cfg 
-      -c "init; halt; program {{.binary_file_path}}; reset; exit;"
+      py {{.ti_ccs_script_launcher}} ./script/ccs/read_hsm_version.py
 
-  openocd_erase:
-    desc: "Erase Device"
-    vars:
-      binary_file_path: "{{.workspace_dir}}/ccs_project/{{.ENV_CCS_BUILD_TARGET}}/{{.ENV_PROJECT_HEX_NAME}}.out"
+  ccscript_check_blank:
+    desc: "Check blank"
     cmds:
     - echo "=================================================="
-    - echo "Erase Device"
+    - echo "Check blank"
     - echo "=================================================="
-    # Command: bin/openocd.exe -f share/openocd/scripts/interface/xds110.cfg -f share/openocd/scripts/board/ti_lp_em_cc2745r10.cfg  -c "init; halt; program xxx.out; [verify;] reset; exit"
     - >
-      {{.ti_openocd_bin_dir}}/openocd.exe 
-      -f {{.ti_openocd_script_dir}}/interface/xds110.cfg 
-      -f {{.ti_openocd_script_dir}}/board/ti_lp_em_cc2745r10.cfg 
-      -c "init; halt; program {{.binary_file_path}}; reset; exit;"
+      py {{.ti_ccs_script_launcher}} ./script/ccs/check_blank.py
 
-  openocd_reset:
-    desc: "Reset Device"
-    vars:
-      binary_file_path: "{{.workspace_dir}}/ccs_project/{{.ENV_CCS_BUILD_TARGET}}/{{.ENV_PROJECT_HEX_NAME}}.out"
+  ccscript_program_hsm:
+    desc: "Program HSM"
     cmds:
     - echo "=================================================="
-    - echo "Reset Device"
+    - echo "Program HSM"
     - echo "=================================================="
-    # Command: bin/openocd.exe -f share/openocd/scripts/interface/xds110.cfg -f share/openocd/scripts/board/ti_lp_em_cc2745r10.cfg  -c "init; reset init; reset run; exit"
-    # Don't know why it is this, but it works
     - >
-      {{.ti_openocd_bin_dir}}/openocd.exe 
-      -f {{.ti_openocd_script_dir}}/interface/xds110.cfg 
-      -f {{.ti_openocd_script_dir}}/board/ti_lp_em_cc2745r10.cfg 
-      -c "init; reset init; reset run; exit"
+      py {{.ti_ccs_script_launcher}} ./script/ccs/program_hsm.py
 
-  openocd_start_server:
-    desc: "Start OpenOCD Server"
-    vars:
-      binary_file_path: "{{.workspace_dir}}/ccs_project/{{.ENV_CCS_BUILD_TARGET}}/{{.ENV_PROJECT_HEX_NAME}}.out"
+  ccscript_program_app:
+    desc: "Program Application"
     cmds:
     - echo "=================================================="
-    - echo "Start OpenOCD Server"
+    - echo "Program Application"
     - echo "=================================================="
-    # Command: bin/openocd.exe -f share/openocd/scripts/interface/xds110.cfg -f share/openocd/scripts/board/ti_lp_em_cc2745r10.cfg
-    # Then user can use Telnet at: localhost:4444 and GDB at: localhost:3333
     - >
-      {{.ti_openocd_bin_dir}}/openocd.exe 
-      -f {{.ti_openocd_script_dir}}/interface/xds110.cfg 
-      -f {{.ti_openocd_script_dir}}/board/ti_lp_em_cc2745r10.cfg
+      py {{.ti_ccs_script_launcher}} ./script/ccs/program_hex.py
+
+  # ccscript_TEST:
+  #   desc: "Erase Application(keep HSM unchanged)"
+  #   cmds:
+  #   - echo "=================================================="
+  #   - echo "Erase Application(keep HSM unchanged)"
+  #   - echo "=================================================="
+  #   - >
+  #     py {{.ti_ccs_script_launcher}} ./script/ccs/test.py
+
+  ccscript_erase_chip:
+    desc: "Erase Application and HSM"
+    cmds:
+    - echo "=================================================="
+    - echo "Erase Application and HSM"
+    - echo "=================================================="
+    - >
+      py {{.ti_ccs_script_launcher}} ./script/ccs/erase_chip.py
+
+  ccscript_soft_reset:
+    desc: "Soft Reset"
+    cmds:
+    - echo "=================================================="
+    - echo "Soft Reset"
+    - echo "=================================================="
+    - >
+      py {{.ti_ccs_script_launcher}} ./script/ccs/soft_reset.py
+
+  xds110_pin_reset:
+    desc: "Reset Device(Pin Reset)"
+    cmds:
+    - echo "=================================================="
+    - echo "Reset Device(Pin Reset)"
+    - echo "=================================================="
+    - >
+      py {{.ti_ccs_script_launcher}} ./script/ccs/pin_reset.py
+
+  # openocd_program_app:
+  #   desc: "Program device"
+  #   vars:
+  #     binary_file_path: "{{.workspace_dir}}/ccs_project/{{.ENV_CCS_BUILD_TARGET}}/{{.ENV_PROJECT_OUT_FILE}}"
+  #   cmds:
+  #   - echo "=================================================="
+  #   - echo "Program Device"
+  #   - echo "=================================================="
+  #   - echo "{{.cmd_str}}"
+  #   - >
+  #     {{.ti_openocd_bin_dir}}/openocd.exe 
+  #     -f {{.ti_openocd_script_dir}}/interface/xds110.cfg 
+  #     -f {{.ti_openocd_script_dir}}/board/ti_lp_em_cc2745r10.cfg 
+  #     -c "init; halt; program {{.binary_file_path}}; reset; exit;"
+
+  # openocd_soft_reset:
+  #   desc: "Reset Device(Soft Reset)"
+  #   vars:
+  #     binary_file_path: "{{.workspace_dir}}/ccs_project/{{.ENV_CCS_BUILD_TARGET}}/{{.ENV_PROJECT_OUT_FILE}}"
+  #   cmds:
+  #   - echo "=================================================="
+  #   - echo "Reset Device(Soft Reset)"
+  #   - echo "=================================================="
+  #   # Command: bin/openocd.exe -f share/openocd/scripts/interface/xds110.cfg -f share/openocd/scripts/board/ti_lp_em_cc2745r10.cfg  -c "init; reset init; reset run; exit"
+  #   # Don't know why it is this, but it works
+  #   - >
+  #     {{.ti_openocd_bin_dir}}/openocd.exe 
+  #     -f {{.ti_openocd_script_dir}}/interface/xds110.cfg 
+  #     -f {{.ti_openocd_script_dir}}/board/ti_lp_em_cc2745r10.cfg 
+  #     -c "init; reset init; reset run; exit"
+
+  # openocd_start_server:
+  #   desc: "Start OpenOCD Server"
+  #   vars:
+  #     binary_file_path: "{{.workspace_dir}}/ccs_project/{{.ENV_CCS_BUILD_TARGET}}/{{.ENV_PROJECT_OUT_FILE}}"
+  #   cmds:
+  #   - echo "=================================================="
+  #   - echo "Start OpenOCD Server"
+  #   - echo "=================================================="
+  #   # Command: bin/openocd.exe -f share/openocd/scripts/interface/xds110.cfg -f share/openocd/scripts/board/ti_lp_em_cc2745r10.cfg
+  #   # Then user can use Telnet at: localhost:4444 and GDB at: localhost:3333
+  #   - >
+  #     {{.ti_openocd_bin_dir}}/openocd.exe 
+  #     -f {{.ti_openocd_script_dir}}/interface/xds110.cfg 
+  #     -f {{.ti_openocd_script_dir}}/board/ti_lp_em_cc2745r10.cfg
 
   # openocd_start_itm:
   #   desc: "Start OpenOCD ITM"
   #   vars:
-  #     binary_file_path: "{{.workspace_dir}}/ccs_project/{{.ENV_CCS_BUILD_TARGET}}/{{.ENV_PROJECT_HEX_NAME}}.out"
+  #     binary_file_path: "{{.workspace_dir}}/ccs_project/{{.ENV_CCS_BUILD_TARGET}}/{{.ENV_PROJECT_OUT_FILE}}"
   #   cmds:
   #   - echo "=================================================="
   #   - echo "Start OpenOCD ITM"

@@ -16,7 +16,7 @@ static void runner_task_entry(void *arg)
     }
 }
 
-void runner_log_create_task(void)
+void runner_log_task_init(void)
 {
     hal_task_create(&(hal_task_param_t){
         .name = "LOG",

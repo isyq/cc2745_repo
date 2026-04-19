@@ -29,6 +29,7 @@ const GPIO1       = GPIO.addInstance();
 const GPIO2       = GPIO.addInstance();
 const I2C         = scripting.addModule("/ti/drivers/I2C", {}, false);
 const I2C1        = I2C.addInstance();
+const ITM         = scripting.addModule("/ti/drivers/ITM");
 const NVS         = scripting.addModule("/ti/drivers/NVS");
 const NVS1        = NVS.addInstance();
 const Power       = scripting.addModule("/ti/drivers/Power");
@@ -38,8 +39,6 @@ const RNG1        = RNG.addInstance();
 const Button      = scripting.addModule("/ti/drivers/apps/Button", {}, false);
 const Button1     = Button.addInstance();
 const Button2     = Button.addInstance();
-const LogModule   = scripting.addModule("/ti/log/LogModule", {}, false);
-const LogModule1  = LogModule.addInstance();
 const Settings    = scripting.addModule("/ti/posix/freertos/Settings");
 
 /**
@@ -97,6 +96,7 @@ GPIO2.$name     = "CONFIG_GPIO_LED_RED";
 
 I2C1.$name = "CONFIG_I2C_0";
 
+
 NVS1.$name                    = "CONFIG_NVSINTERNAL";
 NVS1.internalFlash.$name      = "ti_drivers_nvs_NVSLPF30";
 NVS1.internalFlash.regionBase = 0xE5000;
@@ -111,16 +111,6 @@ Button1.$hardware = system.deviceData.board.components["BTN-1"];
 
 Button2.$name     = "CONFIG_BUTTON_1";
 Button2.$hardware = system.deviceData.board.components["BTN-2"];
-
-LogModule1.$name      = "LogModule0";
-LogModule1.loggerSink = "/ti/log/LogSinkITM";
-
-const LogSinkITM  = scripting.addModule("/ti/log/LogSinkITM", {}, false);
-const LogSinkITM1 = LogSinkITM.addInstance({}, false);
-LogSinkITM1.$name = "CONFIG_ti_log_LogSinkITM_0";
-LogModule1.logger = LogSinkITM1;
-
-const ITM = scripting.addModule("/ti/drivers/ITM", {}, false);
 
 /**
  * References between modules.
@@ -142,7 +132,7 @@ GPIO2.gpioPin.$suggestSolution                   = "boosterpack.36";
 I2C1.i2c.$suggestSolution                        = "I2C0";
 I2C1.i2c.sdaPin.$suggestSolution                 = "boosterpack.10";
 I2C1.i2c.sclPin.$suggestSolution                 = "boosterpack.9";
-Button1.button.$suggestSolution                  = "boosterpack.30";
-Button2.button.$suggestSolution                  = "boosterpack.40";
 ITM.swoPin.$suggestSolution                      = "SWO";
 ITM.swoPin.swoResource.$suggestSolution          = "boosterpack.39";
+Button1.button.$suggestSolution                  = "boosterpack.30";
+Button2.button.$suggestSolution                  = "boosterpack.40";

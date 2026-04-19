@@ -1,9 +1,9 @@
 #include <stdbool.h>
-#include <ti/drivers/dpl/HwiP.h>
 #include <ti/drivers/ITM.h>
-#include <ti/log/LogSinkITM.h>
 
-static bool m_enabled;
+#define LOG_ITM_PORT 0
+
+static bool m_enabled = false;
 
 void log_backend_itm_init(void)
 {
@@ -11,32 +11,16 @@ void log_backend_itm_init(void)
     {
         m_enabled = true;
 
-        // LogSinkITM_init();
+        ITM_open();
     }
 }
 
-// FIXME: Log_printf does not support this usage
 void log_backend_itm_write(uint8_t* p_data, uint16_t data_len)
 {
-    uint32_t key;
-
-    key = HwiP_disable();
-
-    // ITM_send32Polling(LogSinkITM_STIM_HEADER, headerPtr);
-
-    for (uint16_t i = 0; i < data_len; ++i)
-    {
-        ITM_send8Polling(LogSinkITM_STIM_TRACE, p_data[i]);
-    }
-
-    HwiP_restore(key);
+    ITM_sendBufferAtomic(LOG_ITM_PORT, (char*)p_data, data_len);
 }
 
 void log_backend_uninit(void)
 {
-    uint32_t key = HwiP_disable();
-
     ITM_close();
-
-    HwiP_restore(key);
 }

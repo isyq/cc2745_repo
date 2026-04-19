@@ -54,7 +54,6 @@ void DEF_BLE_EVENT_HANDLER_NAME(BLEAPPUTIL_GAP_CONN_TYPE)(uint32 event, BLEAppUt
     case BLEAPPUTIL_LINK_PARAM_UPDATE_EVENT:
     {
 //        gapLinkUpdateEvent_t* pPkt = (gapLinkUpdateEvent_t*)p_msg_data;
-
     }
     break;
 

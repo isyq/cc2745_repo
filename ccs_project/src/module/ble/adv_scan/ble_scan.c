@@ -1,6 +1,7 @@
 #include "ti_ble_config.h"
 #include "bleapputil_api.h"
 #include "ble_util.h"
+#include "log.h"
 
 const BLEAppUtil_ConnParams_t centralConnInitParams =
 {
@@ -56,23 +57,21 @@ static void DEF_BLE_EVENT_HANDLER_NAME(BLEAPPUTIL_GAP_SCAN_TYPE)(uint32 event, B
     }
 }
 
+DEF_STATIC_BLE_EVENT_CFG(m_scan_event_cfg, BLEAPPUTIL_GAP_SCAN_TYPE,
+                         BLEAPPUTIL_SCAN_ENABLED |
+                         BLEAPPUTIL_SCAN_DISABLED);
+
 void ble_scan_init(void)
 {
-    BLEAppUtil_EventHandler_t event_cfg =
-    {
-        .handlerType   = BLEAPPUTIL_GAP_SCAN_TYPE,
-        .pEventHandler = DEF_BLE_EVENT_HANDLER_NAME(BLEAPPUTIL_GAP_SCAN_TYPE),
-        .eventMask     = BLEAPPUTIL_SCAN_ENABLED | BLEAPPUTIL_SCAN_DISABLED
-    };
-
-    BLEAppUtil_registerEventHandler(&event_cfg);
-
+    BLEAppUtil_registerEventHandler(&m_scan_event_cfg);
     BLEAppUtil_scanInit(&centralScanInitParams);
     BLEAppUtil_setConnParams(&centralConnInitParams);
 }
 
 void ble_scan_start(void)
 {
+    log_info("Start scan");
+
     BLEAppUtil_scanStart(&(BLEAppUtil_ScanStart_t){40, 0, 10});
 }
 

@@ -1,5 +1,6 @@
 #include <FreeRTOS.h>
 #include <task.h>
+#include <event_groups.h>
 #include <semaphore.h>
 #include <timers.h>
 #include <ti\drivers\dpl\TimestampP.h>
@@ -25,27 +26,22 @@ void hal_mutex_unlock(hal_mutex_t* p_mutex)
 
 void hal_event_create(hal_event_t* p_event)
 {
-
+    p_event->handle = xEventGroupCreate();
 }
 
 void hal_event_wait(hal_event_t* p_event, uint32_t event_mask)
 {
-
+    xEventGroupWaitBits(p_event->handle, event_mask, pdTRUE, pdFALSE, portMAX_DELAY);
 }
 
 void hal_event_post(hal_event_t* p_event, uint32_t event_bits)
 {
-
-}
-
-void hal_event_get(hal_event_t* p_event)
-{
-
+    xEventGroupSetBits(p_event->handle, event_bits);
 }
 
 void hal_event_clear(hal_event_t* p_event)
 {
-
+    xEventGroupClearBits(p_event->handle, 0xFFFFFFFF);
 }
 
 hal_task_t hal_task_create(hal_task_param_t* p_param)
@@ -82,9 +78,15 @@ char* hal_task_get_name(void)
     return name;
 }
 
-void hal_task_start_scheduler(void)
+void hal_task_scheduler_start(void)
 {
     vTaskStartScheduler();
+}
+
+bool hal_task_scheduler_state(void)
+{
+    uint32_t state = xTaskGetSchedulerState();
+    return state != taskSCHEDULER_NOT_STARTED;
 }
 
 void hal_task_suspend_self(void)

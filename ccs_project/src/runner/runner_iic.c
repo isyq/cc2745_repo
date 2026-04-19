@@ -19,7 +19,7 @@ static void runner_task_entry(void* arg)
     }
 }
 
-void runner_iic_create_task(void)
+void runner_iic_task_init(void)
 {
     hal_task_create(&(hal_task_param_t){
         .name = "IIC",

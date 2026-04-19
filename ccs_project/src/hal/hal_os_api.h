@@ -52,7 +52,8 @@ typedef struct
 
 hal_task_t hal_task_create(hal_task_param_t* p_param);
 char* hal_task_get_name(void);
-void hal_task_start_scheduler(void);
+void hal_task_scheduler_start(void);
+bool hal_task_scheduler_state(void);
 void hal_task_suspend_self(void);
 
 void hal_mutex_init(hal_mutex_t* p_mutex);
@@ -62,7 +63,6 @@ void hal_mutex_unlock(hal_mutex_t* p_mutex);
 void hal_event_create(hal_event_t* p_event);
 void hal_event_wait(hal_event_t* p_event, uint32_t event_mask);
 void hal_event_post(hal_event_t* p_event, uint32_t event_bits);
-void hal_event_get(hal_event_t* p_event);
 void hal_event_clear(hal_event_t* p_event);
 
 void hal_delay_ms(uint16_t delay_ms);

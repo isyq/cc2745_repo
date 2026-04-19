@@ -48,22 +48,20 @@ static void DEF_BLE_EVENT_HANDLER_NAME(BLEAPPUTIL_GAP_ADV_TYPE)(uint32 event, BL
     }
 }
 
+DEF_STATIC_BLE_EVENT_CFG(m_adv_event_cfg, BLEAPPUTIL_GAP_ADV_TYPE,
+                         BLEAPPUTIL_ADV_START_AFTER_ENABLE |
+                         BLEAPPUTIL_ADV_END_AFTER_DISABLE)
+
 void ble_adv_init(void)
 {
-    BLEAppUtil_EventHandler_t event_cfg =
-    {
-        .handlerType   = BLEAPPUTIL_GAP_ADV_TYPE,
-        .pEventHandler = DEF_BLE_EVENT_HANDLER_NAME(BLEAPPUTIL_GAP_ADV_TYPE),
-        .eventMask     = BLEAPPUTIL_ADV_START_AFTER_ENABLE | BLEAPPUTIL_ADV_END_AFTER_DISABLE
-    };
-
-    BLEAppUtil_registerEventHandler(&event_cfg);
-
+    BLEAppUtil_registerEventHandler(&m_adv_event_cfg);
     BleConfig_initAdvSets(m_adv_handles, NULL);
 }
 
 void ble_adv_start(void)
 {
+    log_info("Start advs");
+
     BleConfig_startAdvSets(m_adv_handles, NULL, CFG_ADV_SET_COUNT);
 }
 

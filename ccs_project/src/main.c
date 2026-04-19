@@ -1,30 +1,17 @@
-#include "ble_task.h"
 #include "hal_os_api.h"
 #include "fwk_init.h"
-#include "fwk_util.h"
-#include "ti_ble_config.h"
-#include "runner_list.h"
-#include "log.h"
+#include "fwk_task.h"
+#include "runner_task.h"
+#include "ble_stack_task.h"
 
 int main()
 {
     fwk_init();
 
-    log_init();
+    fwk_task_init();
+    // ble_stack_task_init();
 
-    log_info("\r\n");
-    log_info("======================================");
-    log_info("Reset by: %x", fwk_get_reset_reason());
-    log_info("Build date: %s", fwk_get_build_date());
-    log_info("Build time: %s", fwk_get_build_time());
-    log_info("Device name: %s", attDeviceName);
-    log_info("======================================");
-
-    // ble_task_init();
-    runner_log_create_task();
-    runner_iic_create_task();
-
-    hal_task_start_scheduler();
+    hal_task_scheduler_start();
 
     return 0;
 }

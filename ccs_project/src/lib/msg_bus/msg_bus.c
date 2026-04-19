@@ -8,6 +8,9 @@ void mbus_init(mbus_t* p_bus, mbus_chann_t* p_chann_array, uint32_t chann_count)
     linked_list_init_for_heap(&p_bus->msg_queue);
     hal_event_create(&p_bus->event);
 
+    p_bus->chann_array = p_chann_array;
+    p_bus->chann_count = chann_count;
+
     for (uint32_t i = 0; i < chann_count; i++)
     {
         kv_list_init(p_chann_array[i].topic_list);
@@ -110,7 +113,7 @@ void mbus_consume_message(mbus_t* p_bus, mbus_msg_t* p_msg)
     }
 }
 
-void mbus_consume_call(mbus_t* p_bus)
+void mbus_consume_all(mbus_t* p_bus)
 {
     /* Pend the task until receive a signal */
     hal_event_wait(&p_bus->event, MBUS_NEW_EVENT_ID);
