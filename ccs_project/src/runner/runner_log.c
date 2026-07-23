@@ -20,7 +20,7 @@ void runner_log_task_init(void)
 {
     hal_task_create(&(hal_task_param_t){
         .name = "LOG",
-        .stack_size = 1024,
+        .stack_size = 1536,
         .priority = 5,
         .entry_fn = runner_task_entry,
     });

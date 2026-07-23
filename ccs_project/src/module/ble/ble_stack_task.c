@@ -3,13 +3,8 @@
 #include "ble_util.h"
 #include "ble_dev_info.h"
 #include "log.h"
-#include "fwk_mbus.h"
-#include "ble_adv.h"
-#include "ble_scan.h"
-
-#if defined CHANNEL_SOUNDING
-#include "ble_cs.h"
-#endif
+#include "ble_user_event.h"
+#include "fwk_event.h"
 
 DEF_WEAK_BLE_EVENT_HANDLER(BLEAPPUTIL_GAP_CONN_TYPE);
 DEF_WEAK_BLE_EVENT_HANDLER(BLEAPPUTIL_HCI_GAP_TYPE);
@@ -20,7 +15,7 @@ DEF_WEAK_BLE_EVENT_HANDLER(BLEAPPUTIL_L2CAP_DATA_TYPE);
 DEF_WEAK_BLE_EVENT_HANDLER(BLEAPPUTIL_L2CAP_SIGNAL_TYPE);
 
 DEF_STATIC_BLE_EVENT_CFG(m_peri_event_cfg, BLEAPPUTIL_GAP_CONN_TYPE,
-                         BLEAPPUTIL_LINK_ESTABLISHED_EVENT |
+                         BLEAPPUTIL_LINK_ESTABLISHED_EVENT      |
                          BLEAPPUTIL_LINK_PARAM_UPDATE_REQ_EVENT |
                          BLEAPPUTIL_LINK_TERMINATED_EVENT)
 DEF_STATIC_BLE_EVENT_CFG(m_hci_event_cfg, BLEAPPUTIL_HCI_GAP_TYPE,
@@ -28,8 +23,8 @@ DEF_STATIC_BLE_EVENT_CFG(m_hci_event_cfg, BLEAPPUTIL_HCI_GAP_TYPE,
                          BLEAPPUTIL_HCI_LE_EVENT_CODE)
 DEF_STATIC_BLE_EVENT_CFG(m_pair_passcode_event_cfg, BLEAPPUTIL_PASSCODE_TYPE, 0)
 DEF_STATIC_BLE_EVENT_CFG(m_pair_state_event_cfg, BLEAPPUTIL_PAIR_STATE_TYPE,
-                         BLEAPPUTIL_PAIRING_STATE_STARTED |
-                         BLEAPPUTIL_PAIRING_STATE_COMPLETE |
+                         BLEAPPUTIL_PAIRING_STATE_STARTED   |
+                         BLEAPPUTIL_PAIRING_STATE_COMPLETE  |
                          BLEAPPUTIL_PAIRING_STATE_ENCRYPTED |
                          BLEAPPUTIL_PAIRING_STATE_BOND_SAVED)
 DEF_STATIC_BLE_EVENT_CFG(m_gatt_event_cfg, BLEAPPUTIL_GATT_TYPE,
@@ -45,7 +40,7 @@ DEF_STATIC_BLE_EVENT_CFG(m_l2cap_signal_event_cfg, BLEAPPUTIL_L2CAP_SIGNAL_TYPE,
 static BLEAppUtil_GeneralParams_t m_general_param =
 {
     .taskPriority         = 1,
-    .taskStackSize        = 1024,
+    .taskStackSize        = 2048,
     .profileRole          = 0,                                      /* Defined in syscfg file */
     .addressMode          = DEFAULT_ADDRESS_MODE,                   /* Defined in syscfg file */
     .deviceNameAtt        = attDeviceName,                          /* Defined in syscfg file */
@@ -65,6 +60,8 @@ static void stack_critical_error(int32 errorCode, void* pInfo)
 
 static void stack_init_done(gapDeviceInitDoneEvent_t* deviceInitDoneData)
 {
+    log_info(__FUNCTION__);
+
     memset(&g_ble_dev_info, 0, sizeof(g_ble_dev_info));
 
     g_ble_dev_info.addr_type       = DEFAULT_ADDRESS_MODE;
@@ -85,20 +82,7 @@ static void stack_init_done(gapDeviceInitDoneEvent_t* deviceInitDoneData)
     BLEAppUtil_registerEventHandler(&m_l2cap_data_event_cfg);
     BLEAppUtil_registerEventHandler(&m_l2cap_signal_event_cfg);
 
-#if defined CHANNEL_SOUNDING
-    ble_cs_init();
-#endif
-
-#if (HOST_CONFIG & PERIPHERAL_CFG)
-    ble_adv_init();
-    ble_adv_start();
-#endif
-
-#if (HOST_CONFIG & CENTRAL_CFG)
-    ble_scan_init();
-    ble_scan_start();
-#endif
-    // fwk_mbus_post(FWK_EVENT_STACK_READY);
+    fwk_event_post(FWK_EVENT_STACK_READY);
 }
 
 void ble_stack_task_init(void)

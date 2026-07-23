@@ -5,7 +5,7 @@
 #include "log.h"
 #include "ble_link.h"
 
-void DEF_BLE_EVENT_HANDLER_NAME(BLEAPPUTIL_GAP_CONN_TYPE)(uint32 event, BLEAppUtil_msgHdr_t* p_msg_data)
+void HANDLER_NAME(BLEAPPUTIL_GAP_CONN_TYPE)(uint32 event, BLEAppUtil_msgHdr_t* p_msg_data)
 {
     switch (event)
     {
@@ -62,7 +62,7 @@ void DEF_BLE_EVENT_HANDLER_NAME(BLEAPPUTIL_GAP_CONN_TYPE)(uint32 event, BLEAppUt
     }
 }
 
-void DEF_BLE_EVENT_HANDLER_NAME(BLEAPPUTIL_GATT_TYPE)(uint32 event, BLEAppUtil_msgHdr_t* p_msg_data)
+void HANDLER_NAME(BLEAPPUTIL_GATT_TYPE)(uint32 event, BLEAppUtil_msgHdr_t* p_msg_data)
 {
     gattMsgEvent_t* gattMsg = ( gattMsgEvent_t* )p_msg_data;
     switch ( gattMsg->method )
@@ -78,7 +78,7 @@ void DEF_BLE_EVENT_HANDLER_NAME(BLEAPPUTIL_GATT_TYPE)(uint32 event, BLEAppUtil_m
     }
 }
 
-void DEF_BLE_EVENT_HANDLER_NAME(BLEAPPUTIL_HCI_GAP_TYPE)(uint32 event, BLEAppUtil_msgHdr_t* p_msg_data)
+void HANDLER_NAME(BLEAPPUTIL_HCI_GAP_TYPE)(uint32 event, BLEAppUtil_msgHdr_t* p_msg_data)
 {
     switch (event)
     {
@@ -112,7 +112,7 @@ void DEF_BLE_EVENT_HANDLER_NAME(BLEAPPUTIL_HCI_GAP_TYPE)(uint32 event, BLEAppUti
     }
 }
 
-void DEF_BLE_EVENT_HANDLER_NAME(BLEAPPUTIL_PASSCODE_TYPE)(uint32 event, BLEAppUtil_msgHdr_t* p_msg_data)
+void HANDLER_NAME(BLEAPPUTIL_PASSCODE_TYPE)(uint32 event, BLEAppUtil_msgHdr_t* p_msg_data)
 {
     BLEAppUtil_PasscodeData_t* pData = (BLEAppUtil_PasscodeData_t*)p_msg_data;
 
@@ -120,9 +120,10 @@ void DEF_BLE_EVENT_HANDLER_NAME(BLEAPPUTIL_PASSCODE_TYPE)(uint32 event, BLEAppUt
     GAPBondMgr_PasscodeRsp(pData->connHandle, SUCCESS, B_APP_DEFAULT_PASSCODE);
 }
 
-void DEF_BLE_EVENT_HANDLER_NAME(BLEAPPUTIL_PAIR_STATE_TYPE)(uint32 event, BLEAppUtil_msgHdr_t* p_msg_data)
+void HANDLER_NAME(BLEAPPUTIL_PAIR_STATE_TYPE)(uint32 event, BLEAppUtil_msgHdr_t* p_msg_data)
 {
     BLEAppUtil_PairStateData_t* p_event_data = (BLEAppUtil_PairStateData_t*)p_msg_data;
+    ble_link_t* p_link = ble_link_get(p_event_data->connHandle);
 
     switch (event)
     {
@@ -173,12 +174,12 @@ void DEF_BLE_EVENT_HANDLER_NAME(BLEAPPUTIL_PAIR_STATE_TYPE)(uint32 event, BLEApp
 
 }
 
-void DEF_BLE_EVENT_HANDLER_NAME(BLEAPPUTIL_L2CAP_DATA_TYPE)(uint32 event, BLEAppUtil_msgHdr_t* p_msg_data)
+void HANDLER_NAME(BLEAPPUTIL_L2CAP_DATA_TYPE)(uint32 event, BLEAppUtil_msgHdr_t* p_msg_data)
 {
 
 }
 
-void DEF_BLE_EVENT_HANDLER_NAME(BLEAPPUTIL_L2CAP_SIGNAL_TYPE)(uint32 event, BLEAppUtil_msgHdr_t* p_msg_data)
+void HANDLER_NAME(BLEAPPUTIL_L2CAP_SIGNAL_TYPE)(uint32 event, BLEAppUtil_msgHdr_t* p_msg_data)
 {
 
 }

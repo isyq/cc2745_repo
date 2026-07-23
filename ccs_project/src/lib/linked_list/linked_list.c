@@ -81,7 +81,7 @@ void linked_list_free_node(linked_list_t* p_list, list_node_t* p_node)
         p_node->opt.value = 0;
 
         /* Free both node and node.data_ptr */
-        OSAL_FREE(p_node);
+        HAL_FREE(p_node);
     }
 }
 
@@ -129,7 +129,7 @@ static list_node_t* alloc_heap_node(size_t data_len)
     size_t aligned_data_len = ALIGN_UP(data_len, ALIGN_SIZE);
 
     /* Allocate memory for node and data */
-    list_node_t* p_node = (list_node_t*)OSAL_MALLOC(m_aligned_node_len + aligned_data_len);
+    list_node_t* p_node = (list_node_t*)HAL_MALLOC(m_aligned_node_len + aligned_data_len);
     if (p_node)
     {
         memset(p_node, 0, sizeof(m_aligned_node_len + aligned_data_len));

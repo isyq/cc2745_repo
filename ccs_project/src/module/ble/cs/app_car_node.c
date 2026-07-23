@@ -1,58 +1,3 @@
-/******************************************************************************
-
-@file  app_car_node.c
-
-@brief This file contains the car node functionalities for the BLE application.
-       It handles CS events and estimates distance using both initiator and
-       reflector results using the CSTransceiver and CSProcess modules.
-
-Group: WCS, BTS
-Target Device: cc23xx
-
-******************************************************************************
-
- Copyright (c) 2025-2026, Texas Instruments Incorporated
- All rights reserved.
-
- Redistribution and use in source and binary forms, with or without
- modification, are permitted provided that the following conditions
- are met:
-
- *  Redistributions of source code must retain the above copyright
-    notice, this list of conditions and the following disclaimer.
-
- *  Redistributions in binary form must reproduce the above copyright
-    notice, this list of conditions and the following disclaimer in the
-    documentation and/or other materials provided with the distribution.
-
- *  Neither the name of Texas Instruments Incorporated nor the names of
-    its contributors may be used to endorse or promote products derived
-    from this software without specific prior written permission.
-
- THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
- AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO,
- THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR
- PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR
- CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL,
- EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,
- PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS;
- OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY,
- WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR
- OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE,
- EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-
-******************************************************************************
-
-
-*****************************************************************************/
-
-// The CHANNEL_SOUNDING define added to prevent warnings, because the file uses
-// Channel sounding logic only
-#ifdef CHANNEL_SOUNDING
-
-//*****************************************************************************
-//! Includes
-//*****************************************************************************
 #include "ti_ble_config.h"
 #include "ti/ble/app_util/framework/bleapputil_api.h"
 #include "ti/ble/host/cs/cs.h"
@@ -2570,5 +2515,3 @@ void CarNode_connEventHandler(uint32 event, BLEAppUtil_msgHdr_t *pMsgData)
         }
     }
 }
-
-#endif //CHANNEL_SOUNDING

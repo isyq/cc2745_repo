@@ -8,5 +8,8 @@
 // CS Ranging library PCT results array size for all antenna paths
 #define CS_RANGING_PCT_ARRAY_SIZE_PATHS      (CS_RANGING_PCT_ARRAY_SIZE * CS_RANGING_MAX_ANT_PATHS)
 
+#ifndef MAX_NUM_BLE_CONNS
+#define MAX_NUM_BLE_CONNS 4
+#endif
 
 #endif

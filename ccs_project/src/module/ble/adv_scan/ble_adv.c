@@ -22,7 +22,7 @@ static uint8_t get_adv_set_id(uint8_t adv_handle)
     return 0xFF;
 }
 
-static void DEF_BLE_EVENT_HANDLER_NAME(BLEAPPUTIL_GAP_ADV_TYPE)(uint32 event, BLEAppUtil_msgHdr_t* pMsgData)
+static void HANDLER_NAME(BLEAPPUTIL_GAP_ADV_TYPE)(uint32 event, BLEAppUtil_msgHdr_t* pMsgData)
 {
     uint8_t adv_handle = ((BLEAppUtil_AdvEventData_t*)pMsgData)->pBuf->advHandle;
     uint8_t set_id     = get_adv_set_id(adv_handle);
@@ -49,13 +49,14 @@ static void DEF_BLE_EVENT_HANDLER_NAME(BLEAPPUTIL_GAP_ADV_TYPE)(uint32 event, BL
 }
 
 DEF_STATIC_BLE_EVENT_CFG(m_adv_event_cfg, BLEAPPUTIL_GAP_ADV_TYPE,
-                         BLEAPPUTIL_ADV_START_AFTER_ENABLE |
-                         BLEAPPUTIL_ADV_END_AFTER_DISABLE)
+                         BLEAPPUTIL_ADV_START_AFTER_ENABLE | BLEAPPUTIL_ADV_END_AFTER_DISABLE)
 
 void ble_adv_init(void)
 {
     BLEAppUtil_registerEventHandler(&m_adv_event_cfg);
     BleConfig_initAdvSets(m_adv_handles, NULL);
+
+    log_hex_array_info("Adv handles", m_adv_handles, sizeof(m_adv_handles));
 }
 
 void ble_adv_start(void)

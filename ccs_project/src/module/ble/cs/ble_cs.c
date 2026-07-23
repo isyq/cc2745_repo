@@ -1,15 +1,18 @@
-#include "ble_cs_client.h"
-#include "ble_cs_server.h"
+#include "bleapputil_api.h"
 
 void ble_cs_init(void)
 {
     BLEAppUtil_registerCsCB();
 
 #if defined RANGING_SERVER
-    ble_cs_server_init();
+    #include "ble_ras_server.h"
+
+    ble_ras_server_init();
 #endif
 
 #if defined RANGING_CLIENT
-    ble_cs_client_init();
+    #include "ble_ras_client.h"
+
+    ble_ras_client_init();
 #endif
 }

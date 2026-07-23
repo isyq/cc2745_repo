@@ -3,7 +3,7 @@
 #include "fwk_util.h"
 #include "log.h"
 #include "ti_ble_config.h"
-#include "fwk_mbus.h"
+#include "fwk_event.h"
 
 static void print_welcome(void)
 {
@@ -21,20 +21,21 @@ static void runner_task_entry(void* arg)
     log_init();
     print_welcome();
 
-    fwk_mbus_init();
-    fwk_mbus_post(FWK_EVENT_INIT_STACK);
+    fwk_event_init();
+
+    fwk_event_post(FWK_EVENT_INIT_STACK);
 
     for (;;)
     {
-        fwk_mbus_pend();
+        fwk_event_pend();
     }
 }
 
 void fwk_task_init(void)
 {
     hal_task_create(&(hal_task_param_t){
-        .name       = "INIT",
-        .stack_size = 1024,
+        .name       = "FWK",
+        .stack_size = 2048,
         .priority   = 5,
         .entry_fn   = runner_task_entry,
     });

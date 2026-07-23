@@ -43,7 +43,6 @@ typedef struct
 } mbus_t;
 
 
-#define MBUS_TOPIC_HANDLER_NAME(name) handle_ ## name
 #define DEF_STATIC_TOPIC_LIST(name, depth) DEF_STATIC_KV_LIST(name, mbus_topic_t, depth)
 #define DEF_WEAK_TOPIC_HANDLER(name) ATTR_WEAK void name(void* p_data, uintptr_t value) {;}
 

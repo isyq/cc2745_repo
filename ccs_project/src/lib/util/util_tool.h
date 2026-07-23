@@ -101,4 +101,7 @@
 #define ATTR_ALIGN(x)   __attribute__((aligned(x)))
 #define ATTR_PACKED     __attribute__((packed))
 
+#define HANDLER_NAME(name) handle_ ## name
+#define ISR_NAME(name) isr_ ## name
+
 #endif

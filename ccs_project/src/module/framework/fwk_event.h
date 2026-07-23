@@ -1,5 +1,5 @@
-#ifndef FWK_MBUS_H
-#define FWK_MBUS_H
+#ifndef FWK_EVENT_H
+#define FWK_EVENT_H
 
 #include <stdint.h>
 
@@ -10,8 +10,8 @@
 
 #define FWK_EVENT_COUNT       (FWK_EVENT_EXIT_SLEEP + 1)
 
-void fwk_mbus_init(void);
-void fwk_mbus_post(uint8_t event);
-void fwk_mbus_pend(void);
+void fwk_event_init(void);
+void fwk_event_post(uint8_t event);
+void fwk_event_pend(void);
 
 #endif

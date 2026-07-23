@@ -6,9 +6,10 @@
 #include <stdbool.h>
 #include <FreeRTOS.h>
 #include <timers.h>
+#include <bleapputil_api.h>
 
-#define OSAL_MALLOC malloc
-#define OSAL_FREE   free
+#define HAL_MALLOC ICall_malloc
+#define HAL_FREE   ICall_free
 
 typedef void (*hal_task_entry_fn)(void* arg);
 
